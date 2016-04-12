@@ -37,8 +37,16 @@ public class ListC<T extends Elem> implements List<T> {
 
   @Override
   public int find(T elem) {
-    // TODO Auto-generated method stub
-    return 0;
+    int foundCounter;
+    T tmp = first.getContent();
+    while(temp!=null){
+      if(tmp==elem){
+        return foundCounter;
+      }else {
+        foundCounter++
+        tmp=first.getNextElem();
+      }
+    }
   }
 
   @Override
