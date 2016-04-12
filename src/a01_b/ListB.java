@@ -19,7 +19,7 @@ public class ListB<T> implements List<T> {
   private ContainerB<T>[] array=null;
   
   /**
-   * 
+   * Verlängerungsvariable für die Arrayverlängerung
    */
   private int len;
   
@@ -63,29 +63,45 @@ public class ListB<T> implements List<T> {
     return 0;
   }
 
-  @Override
-  public T retrieve(int pos) {
-    // TODO Auto-generated method stub
-    return null;
-  }
 
   @SuppressWarnings("unchecked")
   @Override
   public void concat(List<T> list) {
-    int newSize= size() + list.size() + 1;
-    int listIndex=0;
+    int newSize= array.length + list.size();
+    // Stoppvariablen
+    ContainerB<T> stopContainer = null;
+    int stopIndex = -1;
+    // neues Array
     ContainerB<T>[] tmpArray = new ContainerB[newSize];
-    // Stop-Element
-    tmpArray[listIndex]=
-        (ContainerB<T>) new ContainerB<Object>(new Stop(), newSize-2, -1);
-    listIndex++;
-    // origin List copy
-    ContainerB<T> tmpContainer = findFirstElement();
-    while( !(tmpContainer.getContent() instanceof Stop) ){
-      tmpArray[listIndex]=array[tmpContainer.getNextIndex()];
+    // Elemente Umschreiben
+    for (int i=0; i< array.length; i++){
+      tmpArray[i]= array[i];
+      // catch the stop-Element
+      if (tmpArray[i].getContent() instanceof Stop){
+        stopContainer = tmpArray[i];
+        stopIndex=i;
+      }
     }
     
-    // list copy
+    //list copy (deep copy of Containers, flat copy of Elements)
+    for (int i = array.length; i < newSize; i++){
+      tmpArray[i]=(ContainerB<T>) new ContainerB<Object>(
+          list.retrieve(i-array.length),
+          i-1,
+          i+1
+       ); 
+    }
+    //conecting the joins;
+    // last old
+    tmpArray[stopContainer.getPreviousIndex()].setNextIndex(array.length);
+    //first new
+    tmpArray[array.length].setPreviousIndex(stopContainer.getPreviousIndex());
+    //Stop
+    stopContainer.setPreviousIndex(newSize-1);
+    //very last
+    tmpArray[newSize-1].setNextIndex(stopIndex);
+   
+    array=tmpArray;
     
   }
 
@@ -100,6 +116,8 @@ public class ListB<T> implements List<T> {
     return counter;
   }
   
+  // --------------------------------------------------------------------------
+  
   
   private ContainerB<T> findFirstElement(){
     ContainerB<T> first = null;
@@ -113,30 +131,20 @@ public class ListB<T> implements List<T> {
     }
     return first;
   }
-  
-  /**
-   * 
-   * @param elems
-   */
-  /**
-  @SafeVarargs
-  public ListB(int len, T ... elems){
-    if (len < 1){
-      len = 20;
+
+  @Override
+  public T retrieve(int pos) throws IndexOutOfBoundsException {
+    if (pos < 0 || pos >= size() ){
+      throw new IndexOutOfBoundsException();
     }
-    int initLen = 0;
-    if( len < elems.length ){
-      initLen = elems.length;
-    } else {
-      initLen = len;
+    ContainerB<T> tmpContainer = findFirstElement();
+    while( !(tmpContainer.getContent() instanceof Stop) ){
+      if (tmpContainer.getContent().equals())
+      tmpContainer=array[tmpContainer.getNextIndex()];
     }
-    array = new Elem[initLen];
-    for ( int i=0 ; i < len ; i++ ){
-      array[i]=elems[i];
-    }
-    this.len=len;
+    return null;
   }
-  */
+  
   //---------------------------------------------------------------------------
 
 

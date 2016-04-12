@@ -101,7 +101,7 @@ public class ListA<T> implements List<T> {
 
   @Override
   public T retrieve(int pos) throws IndexOutOfBoundsException {
-    if ( pos < 0 || pos > size() ){
+    if ( pos < 0 || pos => size() ){
       throw new IndexOutOfBoundsException();
     } 
     return array[pos];

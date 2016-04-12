@@ -20,6 +20,9 @@ public class ListATest {
   public void testKonstruktor() {
     assertNotNull(new ListA<Elem>());
     assertNotNull(makeAlphListA());
+    ListA<Elem> list = new ListA<Elem>(null, new Elem(), null);
+    assertNotNull( list );
+    assertEquals(1, list);
   }
   
   @Test
