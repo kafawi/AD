@@ -110,7 +110,7 @@ public class ListA<T> implements List<T> {
   @SuppressWarnings("unchecked")
   @Override
   public void concat(List<T> list) {
-    T[] tmpArray =(T[]) new Object[ size() + list.size() - 1 ];
+    T[] tmpArray =(T[]) new Object[ size() + list.size()];
     for (int i=0; i < size(); i++){
       tmpArray[i]= array[i];
     }

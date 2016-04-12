@@ -8,13 +8,13 @@ import a01.Stop;
 import a01.List;
 
 /**
- * @author kallotti
+ * @author Alexander Mendel & kafawi
  *
  */
 public class ListB<T> implements List<T> {
   
   /**
-   * 
+   * Array, welches die Elemente Verwaltet
    */
   private ContainerB<T>[] array=null;
   
@@ -44,14 +44,47 @@ public class ListB<T> implements List<T> {
   }
   
   
-  
+  @SuppressWarnings("unchecked")
   @Override
   public void insert(int pos, T elem) throws IndexOutOfBoundsException {
     if (pos < 0 || pos > size() ){
       throw new IndexOutOfBoundsException();
     }
-    if(pos)
+    int insertIndex= array.length-1; 
+    // Array vergrößern?
+    if(array[array.length-1] != null ){
+      ContainerB<T>[] tmpArray = new ContainerB[array.length+len];
+      for (int i = 0; i < array.length; i++){
+        tmpArray[i] = array[i]; 
+      }
+    insertIndex=array.length;
+    array=tmpArray;
+    } else {
+    //berechne position im Array, (letzte freie stelle hinten.) 
+      while (array[insertIndex-1] == null){
+        insertIndex--;
+      }
+    }
     
+    
+    ContainerB<T> nextContainer = findFirstElement(); 
+    for(int i=0; i < pos; i++){
+      nextContainer=array[nextContainer.getNextIndex()];
+    }
+    
+    // save Position for new one
+    int previousIndex= array[nextContainer.getPreviousIndex()].getNextIndex();
+    int nextIndex = nextContainer.getNextIndex();
+    
+    array[nextContainer.getPreviousIndex()].setNextIndex(insertIndex);
+    nextContainer.setPreviousIndex(insertIndex);
+
+    array[insertIndex] = 
+        (ContainerB<T>) new ContainerB<Object>(
+            elem,
+            previousIndex,// previousIndex
+            nextIndex // nextIndex
+        );
   }
 
   @Override
@@ -59,8 +92,23 @@ public class ListB<T> implements List<T> {
     if (pos < 0 || pos >= size() ){
       throw new IndexOutOfBoundsException();
     }
-    // TODO Auto-generated method stub
     
+    ContainerB<T> delContainer = findFirstElement(); 
+    for(int i=0; i < pos; i++){
+      delContainer=array[delContainer.getNextIndex()];
+    }
+    
+    
+    int previousIndex= array[delContainer.getPreviousIndex()].getNextIndex();
+    int nextIndex = delContainer.getNextIndex();
+    int thisIndex = array[nextIndex].getPreviousIndex();
+    
+    // umhängen
+    array[previousIndex].setNextIndex(nextIndex);
+    array[nextIndex].setPreviousIndex(previousIndex);
+    
+    // aus listze löschen.
+    array[thisIndex] = null;
   }
 
   @Override
@@ -125,7 +173,7 @@ public class ListB<T> implements List<T> {
       throw new IndexOutOfBoundsException();
     }
     ContainerB<T> tmpContainer = findFirstElement();
-    for(int i=0; i <= pos; i++){
+    for(int i=0; i < pos; i++){
       tmpContainer=array[tmpContainer.getNextIndex()];
     }
     return tmpContainer.getContent();
