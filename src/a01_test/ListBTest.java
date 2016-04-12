@@ -60,16 +60,12 @@ public class ListBTest {
   @Test
   public void testFind() {
     ListB<String> listA = makeAlphListA();
-    
     assertEquals(0, listA.find("a"));
-    System.out.println("1");
     assertEquals(-1, listA.find("z"));
-    System.out.println("1");
     assertEquals(listA.size()-1, listA.find("i"));
-    System.out.println("1");
+    System.out.println("test 3");
     listA.insert(9, "Test");
     assertEquals("Test", listA.retrieve(9));
-    System.out.println("1");
   }
   
   @Test(expected=IndexOutOfBoundsException.class)
@@ -92,7 +88,10 @@ public class ListBTest {
   public void testConcat() {
     ListB<String> listA = makeAlphListA();
     ListB<String> listB = makeAlphListA();
+    listA.printArray();
+    listB.printArray();
     listA.concat(listB);
+    listA.printArray();
   
     assertEquals(18, listA.size());
     assertEquals("a", listA.retrieve(0));

@@ -20,17 +20,17 @@ public class ContainerB<T> {
   /*
    * 
    */
-  private int previousIndex;
+  protected int previousIndex;
   
   /**
    * 
    */
-  private int nextIndex;
+  protected int nextIndex;
   
   //---------------------------------------------------------------------------
-  public ContainerB(){
-    this(null, -1, -1);
-  }
+  //public ContainerB(){
+  //  this(null, -1, -1);
+  //}
   /**
    * 
    * @param content
@@ -79,6 +79,7 @@ public class ContainerB<T> {
   /**
    * 
    * @param nextIndex
+   * @return 
    */
   public void setNextIndex(int nextIndex){
     this.nextIndex = nextIndex;

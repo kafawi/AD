@@ -4,7 +4,6 @@
 package a01_b;
 
 //import a01.Elem;
-import a01.Stop;
 import a01.List;
 
 /**
@@ -28,19 +27,30 @@ public class ListB<T> implements List<T> {
   public ListB(int len){
     this.len= (len > 10 )? len : 10 ;
     array=new ContainerB[this.len];
-    array[0]=(ContainerB<T>) new ContainerB<Object>(new Stop(), -1, -1);
+    array[0]=(StopB<T>) new StopB<Object>(-1);;
   }
   
   @SuppressWarnings("unchecked")
   public ListB(int len, T ... elems ){
-    this.len= (len > 10 )? len : 10 ;
-    array=new ContainerB[elems.length+1];
-    array[0]=
-        (ContainerB<T>) new ContainerB<Object>(new Stop(), elems.length-2, -1);
-    for (int i =0; i< elems.length; i++){
-      array[i+1]=(ContainerB<T>) new ContainerB<Object>(elems[i], i-1, i+1);
+    this.len= (len > 0 )? len : 10 ;
+    
+     // entferne alle Nuller
+    int elemAnz=0;
+    for (T elem : elems){
+      if (elem != null){
+        elemAnz++;
+      }
     }
-   
+    array=new ContainerB[elemAnz+1];
+    int j = 0;
+    for (int i =0; i< elems.length; i++){
+      if (elems[i] != null){
+        array[j]=(ContainerB<T>) new ContainerB<Object>(elems[i], j-1, j+1);
+        j++;
+      }
+    }
+    array[elemAnz]=
+        (StopB<T>) new StopB<Object>(elemAnz-1);  
   }
   
   
@@ -73,8 +83,8 @@ public class ListB<T> implements List<T> {
     }
     
     // save Position for new one
-    int previousIndex= array[nextContainer.getPreviousIndex()].getNextIndex();
-    int nextIndex = nextContainer.getNextIndex();
+    int previousIndex= nextContainer.getPreviousIndex();
+    int nextIndex = array[nextContainer.getPreviousIndex()].getNextIndex();
     
     array[nextContainer.getPreviousIndex()].setNextIndex(insertIndex);
     nextContainer.setPreviousIndex(insertIndex);
@@ -99,7 +109,7 @@ public class ListB<T> implements List<T> {
     }
     
     
-    int previousIndex= array[delContainer.getPreviousIndex()].getNextIndex();
+    int previousIndex= delContainer.getPreviousIndex();
     int nextIndex = delContainer.getNextIndex();
     int thisIndex = array[nextIndex].getPreviousIndex();
     
@@ -115,12 +125,13 @@ public class ListB<T> implements List<T> {
   public int find(T elem) {
     int counter=0;
     ContainerB<T> tmpContainer = findFirstElement();
-    while( !(tmpContainer.getContent() instanceof Stop) ){
+    while( !(tmpContainer instanceof StopB<?>)){
       if (tmpContainer.getContent().equals(elem)){
         return counter;
       }
       counter++;
       tmpContainer=array[tmpContainer.getNextIndex()];
+      //System.out.println("" + counter + tmpContainer.getNextIndex() );
     }
     return -1;
   }
@@ -139,7 +150,7 @@ public class ListB<T> implements List<T> {
     for (int i=0; i< array.length; i++){
       tmpArray[i]= array[i];
       // catch the stop-Element
-      if (tmpArray[i].getContent() instanceof Stop){
+      if (tmpArray[i] instanceof StopB<?>){
         stopContainer = tmpArray[i];
         stopIndex=i;
       }
@@ -153,15 +164,21 @@ public class ListB<T> implements List<T> {
           i+1
        ); 
     }
+    
+    
+    
     //conecting the joins;
-    // last old
-    tmpArray[stopContainer.getPreviousIndex()].setNextIndex(array.length);
-    //first new
-    tmpArray[array.length].setPreviousIndex(stopContainer.getPreviousIndex());
-    //Stop
+  //first new -> last old: Nextvalue of the last old
+    int lastOld = stopContainer.getPreviousIndex();
+    int firstNew = array.length;
+    // StopPrev to last 
     stopContainer.setPreviousIndex(newSize-1);
-    //very last
+    // LastNex to Stop
     tmpArray[newSize-1].setNextIndex(stopIndex);
+    
+    //first new -> last old
+    tmpArray[firstNew].setPreviousIndex(lastOld);
+    tmpArray[lastOld].setNextIndex(firstNew);
    
     array=tmpArray;
     
@@ -183,7 +200,7 @@ public class ListB<T> implements List<T> {
   public int size() {
     int counter=0;
     ContainerB<T> tmpContainer = findFirstElement();
-    while( !(tmpContainer.getContent() instanceof Stop) ){
+    while( !(tmpContainer instanceof StopB<?>) ){
       counter++;
       tmpContainer=array[tmpContainer.getNextIndex()];
     }
@@ -196,14 +213,24 @@ public class ListB<T> implements List<T> {
   private ContainerB<T> findFirstElement(){
     ContainerB<T> first = null;
     int i = 0;
-    while(first == null || i == array.length){
-      if (array[i].getPreviousIndex() == -1 
-          && array[i].getContent() != null){
+    while(first == null && i < array.length){
+      if (array[i].getPreviousIndex() == -1 ){
         first = array[i];
       }
       i++;
     }
     return first;
+  }
+  
+  public void printArray(){
+    for (int i=0; i < array.length ; i++){
+      if (array[i] instanceof ContainerB<?>){
+        System.out.println( "" + i + " " + array[i].getContent() +  " " + array[i].getPreviousIndex()+ " " + array[i].getNextIndex());
+      } else {
+        System.out.println("" + i + " nullinull");
+      }
+    }
+    
   }
   
   //---------------------------------------------------------------------------
