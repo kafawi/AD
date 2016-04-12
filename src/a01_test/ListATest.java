@@ -22,7 +22,7 @@ public class ListATest {
     assertNotNull(makeAlphListA());
     ListA<Elem> list = new ListA<Elem>(null, new Elem(), null);
     assertNotNull( list );
-    assertEquals(1, list);
+    assertEquals(1, list.size());
   }
   
   @Test

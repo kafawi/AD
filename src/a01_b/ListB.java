@@ -46,21 +46,35 @@ public class ListB<T> implements List<T> {
   
   
   @Override
-  public void insert(int pos, T elem) {
-    // TODO Auto-generated method stub
+  public void insert(int pos, T elem) throws IndexOutOfBoundsException {
+    if (pos < 0 || pos > size() ){
+      throw new IndexOutOfBoundsException();
+    }
+    if(pos)
     
   }
 
   @Override
-  public void delete(int pos) {
+  public void delete(int pos) throws IndexOutOfBoundsException {
+    if (pos < 0 || pos >= size() ){
+      throw new IndexOutOfBoundsException();
+    }
     // TODO Auto-generated method stub
     
   }
 
   @Override
   public int find(T elem) {
-    // TODO Auto-generated method stub
-    return 0;
+    int counter=0;
+    ContainerB<T> tmpContainer = findFirstElement();
+    while( !(tmpContainer.getContent() instanceof Stop) ){
+      if (tmpContainer.getContent().equals(elem)){
+        return counter;
+      }
+      counter++;
+      tmpContainer=array[tmpContainer.getNextIndex()];
+    }
+    return -1;
   }
 
 
@@ -104,6 +118,18 @@ public class ListB<T> implements List<T> {
     array=tmpArray;
     
   }
+  
+  @Override
+  public T retrieve(int pos) throws IndexOutOfBoundsException {
+    if (pos < 0 || pos >= size() ){
+      throw new IndexOutOfBoundsException();
+    }
+    ContainerB<T> tmpContainer = findFirstElement();
+    for(int i=0; i <= pos; i++){
+      tmpContainer=array[tmpContainer.getNextIndex()];
+    }
+    return tmpContainer.getContent();
+  }
 
   @Override
   public int size() {
@@ -130,19 +156,6 @@ public class ListB<T> implements List<T> {
       i++;
     }
     return first;
-  }
-
-  @Override
-  public T retrieve(int pos) throws IndexOutOfBoundsException {
-    if (pos < 0 || pos >= size() ){
-      throw new IndexOutOfBoundsException();
-    }
-    ContainerB<T> tmpContainer = findFirstElement();
-    while( !(tmpContainer.getContent() instanceof Stop) ){
-      if (tmpContainer.getContent().equals())
-      tmpContainer=array[tmpContainer.getNextIndex()];
-    }
-    return null;
   }
   
   //---------------------------------------------------------------------------

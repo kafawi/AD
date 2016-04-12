@@ -74,15 +74,15 @@ public class ListA<T> implements List<T> {
   @SuppressWarnings("unchecked")
   @Override
   public void delete(int pos) throws IndexOutOfBoundsException {
-    if ( pos < 0 || pos > size() ){
+    if ( pos < 0 || pos >= size() ){
       throw new IndexOutOfBoundsException();
     } else {
       T[] tmpArray =(T[]) new Object[ size() - 1 ]; 
       for (int i=0; i < pos; i++ ){
         tmpArray[i] = array[i];
       }
-      for (int i=pos ;i < size() ;i++){
-        tmpArray[i-1]= array[i];
+      for (int i=pos ;i < size()-1 ;i++){
+        tmpArray[i]= array[i+1];
       }
       array=tmpArray;
     }
@@ -101,7 +101,7 @@ public class ListA<T> implements List<T> {
 
   @Override
   public T retrieve(int pos) throws IndexOutOfBoundsException {
-    if ( pos < 0 || pos => size() ){
+    if ( pos < 0 || pos >= size() ){
       throw new IndexOutOfBoundsException();
     } 
     return array[pos];
@@ -111,19 +111,11 @@ public class ListA<T> implements List<T> {
   @Override
   public void concat(List<T> list) {
     T[] tmpArray =(T[]) new Object[ size() + list.size() - 1 ];
-    if (!(array == null)){
-      for (int i=0; i < size(); i++){
-        tmpArray[i]= array[i];
-      }
+    for (int i=0; i < size(); i++){
+      tmpArray[i]= array[i];
     }
-    if (list instanceof ListA<?>){
-      for (int i=0; i < list.size(); i++){
-        tmpArray[ size()+i ]= array[i];
-      }
-    } else {
-      for (int i = 0; i < list.size(); i++){
-        tmpArray[ size()+i ]= list.retrieve(i);
-      }
+    for (int i = 0; i < list.size(); i++){
+      tmpArray[ size()+i ]= list.retrieve(i);
     }
     array = tmpArray;
   }
