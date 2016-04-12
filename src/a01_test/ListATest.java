@@ -27,12 +27,34 @@ public class ListATest {
   
   @Test
   public void testInsert() {
-    fail("Not yet implemented");
+    ListA<String> listA = makeAlphListA();
+	  listA.insert(4, "T");
+	  assertEquals("T", listA.retrieve(4));
+	
+	  listA.insert(1, "BB");
+	  assertEquals("BB", listA.retrieve(1));
   }
   
-  @Test
+  @Test(expected=IndexOutOfBoundsException.class)
   public void testDelete() {
-    fail("Not yet implemented");
+  ListA<String> listA = makeAlphListA();
+	//Versuche die letzten drei Elem zu löschen
+	listA.delete(listA.size()-1);
+	assertEquals(-1, listA.find("i"));
+	listA.delete(listA.size()-1);
+	assertEquals(-1, listA.find("h"));
+	listA.delete(listA.size()-1);
+	assertEquals(-1, listA.find("g"));
+	
+	//verbleibende Größe
+	assertEquals(6, listA.size());
+	
+	try {
+		listA.delete(-13);
+	}catch(IndexOutOfBoundsException e){
+		System.out.println(e);
+		throw e;
+	}
   }
   
   @Test
@@ -42,16 +64,36 @@ public class ListATest {
     assertEquals(0, listA.find("a"));
     assertEquals(-1, listA.find("z"));
     assertEquals(listA.size()-1, listA.find("i"));
+    
+    listA.insert(9, "Test");
+    assertEquals("Test", listA.retrieve(9));
   }
   
-  @Test
+  @Test(expected=IndexOutOfBoundsException.class)
   public void testRetrieve() {
-    fail("Not yet implemented");
+  ListA<String> listA = makeAlphListA();  
+	assertEquals("a", listA.retrieve(0));
+	assertEquals("b", listA.retrieve(1));
+	assertEquals("c", listA.retrieve(2));
+	assertEquals("i", listA.retrieve(8));
+	
+	try {
+		listA.retrieve(-13);
+	}catch(IndexOutOfBoundsException e){
+		System.out.println(e);
+		throw e;
+	}
   }
   
   @Test
   public void testConcat() {
-    fail("Not yet implemented");
+  ListA<String> listA = makeAlphListA();
+	ListA<String> listB = makeAlphListA();
+	listA.concat(listB);
+	
+	assertEquals(18, listA.size());
+	assertEquals("a", listA.retrieve(0));
+	assertEquals("i", listA.retrieve(17));
   }
   
   @Test
