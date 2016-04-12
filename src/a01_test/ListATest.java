@@ -37,24 +37,24 @@ public class ListATest {
   
   @Test(expected=IndexOutOfBoundsException.class)
   public void testDelete() {
-  ListA<String> listA = makeAlphListA();
-	//Versuche die letzten drei Elem zu löschen
-	listA.delete(listA.size()-1);
-	assertEquals(-1, listA.find("i"));
-	listA.delete(listA.size()-1);
-	assertEquals(-1, listA.find("h"));
-	listA.delete(listA.size()-1);
-	assertEquals(-1, listA.find("g"));
+    ListA<String> listA = makeAlphListA();
+    //Versuche die letzten drei Elem zu löschen
+    listA.delete(listA.size()-1);
+    assertEquals(-1, listA.find("i"));
+    listA.delete(listA.size()-1);
+    assertEquals(-1, listA.find("h"));
+    listA.delete(listA.size()-1);
+    assertEquals(-1, listA.find("g"));
 	
-	//verbleibende Größe
-	assertEquals(6, listA.size());
+    //verbleibende Größe
+    assertEquals(6, listA.size());
 	
-	try {
-		listA.delete(-13);
-	}catch(IndexOutOfBoundsException e){
-		System.out.println(e);
-		throw e;
-	}
+    try {
+      listA.delete(-13);
+    }catch(IndexOutOfBoundsException e){
+      System.out.println(e);
+      throw e;
+    }
   }
   
   @Test
@@ -71,29 +71,29 @@ public class ListATest {
   
   @Test(expected=IndexOutOfBoundsException.class)
   public void testRetrieve() {
-  ListA<String> listA = makeAlphListA();  
-	assertEquals("a", listA.retrieve(0));
-	assertEquals("b", listA.retrieve(1));
-	assertEquals("c", listA.retrieve(2));
-	assertEquals("i", listA.retrieve(8));
+    ListA<String> listA = makeAlphListA();  
+    assertEquals("a", listA.retrieve(0));
+    assertEquals("b", listA.retrieve(1));
+    assertEquals("c", listA.retrieve(2));
+    assertEquals("i", listA.retrieve(8));
 	
-	try {
-		listA.retrieve(-13);
-	}catch(IndexOutOfBoundsException e){
-		System.out.println(e);
-		throw e;
-	}
+    try {
+      listA.retrieve(-13);
+    }catch(IndexOutOfBoundsException e){
+      System.out.println(e);
+      throw e;
+    }
   }
   
   @Test
   public void testConcat() {
-  ListA<String> listA = makeAlphListA();
-	ListA<String> listB = makeAlphListA();
-	listA.concat(listB);
-	
-	assertEquals(18, listA.size());
-	assertEquals("a", listA.retrieve(0));
-	assertEquals("i", listA.retrieve(17));
+    ListA<String> listA = makeAlphListA();
+    ListA<String> listB = makeAlphListA();
+    listA.concat(listB);
+    
+    assertEquals(18, listA.size());
+    assertEquals("a", listA.retrieve(0));
+    assertEquals("i", listA.retrieve(17));
   }
   
   @Test
