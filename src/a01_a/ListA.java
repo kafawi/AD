@@ -14,19 +14,17 @@ public class ListA<T> implements List<T> {
   
   /**
    * 
+   * wenn null: leere Liste
    */
   private T[] array;
   //---------------------------------------------------------------------------
   
   /**
-   * Sollte nicht für den Test verwendet werden.
-   * Blöder Konstruktor.
-   * @param anz
-   *  
+   * leere liste
    */
   @SuppressWarnings("unchecked")
-  public ListA(int anz){
-    array = (T[]) new Object[anz];
+  public ListA(){
+    array = (T[]) new Object[0];
   }
   
   /**
@@ -35,9 +33,20 @@ public class ListA<T> implements List<T> {
    */
   @SuppressWarnings("unchecked")
   public ListA(T ... elems){
-    array = (T[]) new Object[elems.length];
-    for ( int i=0 ; i < array.length ; i++ ){
-      array[i]=elems[i];
+    // count all elements without null
+    int len = 0;
+    for (int i=0; i < elems.length ; i++){
+      if (!(elems[i]==null)){
+        len++;
+      }
+    }
+    array = (T[]) new Object[len];
+    int j = 0;
+    for ( int i=0 ; i < elems.length ; i++ ){
+      if (!(elems[i] == null)) {
+        array[j]=elems[i];  
+        j++;
+      }
     }
   }
   //---------------------------------------------------------------------------
@@ -45,18 +54,20 @@ public class ListA<T> implements List<T> {
   @SuppressWarnings("unchecked")
   @Override
   public void insert(int pos, T elem) throws IndexOutOfBoundsException {
-    if ( pos < 0 || pos > size() ){
-      throw new IndexOutOfBoundsException();
-    } else {
-      T[] tmpArray =(T[]) new Object[ size() +1 ];
-      for (int i=0; i < pos; i++ ){
-        tmpArray[i] = array[i];
+    if (!(elem == null)){
+      if ( pos < 0 || pos > size() ){
+        throw new IndexOutOfBoundsException();
+      } else {
+        T[] tmpArray =(T[]) new Object[ size() +1 ];
+        for (int i=0; i < pos; i++ ){
+          tmpArray[i] = array[i];
+        }
+        tmpArray[pos] = elem;
+        for (int i=pos ;i < size() ;i++){
+          tmpArray[i+1]= array[i];
+        }
+        array=tmpArray;
       }
-      tmpArray[pos] = elem;
-      for (int i=pos ;i < size() ;i++){
-        tmpArray[i+1]= array[i];
-      }
-      array=tmpArray;
     }
   }
 
@@ -99,10 +110,11 @@ public class ListA<T> implements List<T> {
   @SuppressWarnings("unchecked")
   @Override
   public void concat(List<T> list) {
-    
     T[] tmpArray =(T[]) new Object[ size() + list.size() - 1 ];
-    for (int i=0; i < size(); i++){
-      tmpArray[i]= array[i];
+    if (!(array == null)){
+      for (int i=0; i < size(); i++){
+        tmpArray[i]= array[i];
+      }
     }
     if (list instanceof ListA<?>){
       for (int i=0; i < list.size(); i++){

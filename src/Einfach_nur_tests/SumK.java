@@ -25,6 +25,9 @@ public class SumK {
     return (N*(N+1))/2;
   }
   
+  public static Integer[] testNull(int anz){
+    return new Integer[anz];
+  }
   
   
 
@@ -34,8 +37,12 @@ public class SumK {
     System.out.println(recur(N));
     System.out.println(iter(N));
     System.out.println(gauss(N));
-    
-
+    Integer[] pp = new Integer[0];
+    for (int i =0; i < pp.length; i++){
+      System.out.println(pp[i]);
+    }
+    System.out.println(pp.length);
   }
+  
 
 }

@@ -35,11 +35,12 @@ public class ListB<T> implements List<T> {
   public ListB(int len, T ... elems ){
     this.len= (len > 10 )? len : 10 ;
     array=new ContainerB[elems.length+1];
+    array[0]=
+        (ContainerB<T>) new ContainerB<Object>(new Stop(), elems.length-2, -1);
     for (int i =0; i< elems.length; i++){
-      array[i]=(ContainerB<T>) new ContainerB<Object>(elems[i], i-1, i+1);
+      array[i+1]=(ContainerB<T>) new ContainerB<Object>(elems[i], i-1, i+1);
     }
-    array[elems.length+1]=
-        (ContainerB<T>) new ContainerB<Object>(new Stop(), -1, -1);
+   
   }
   
   
@@ -68,16 +69,49 @@ public class ListB<T> implements List<T> {
     return null;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public void concat(List<T> list) {
-    // TODO Auto-generated method stub
+    int newSize= size() + list.size() + 1;
+    int listIndex=0;
+    ContainerB<T>[] tmpArray = new ContainerB[newSize];
+    // Stop-Element
+    tmpArray[listIndex]=
+        (ContainerB<T>) new ContainerB<Object>(new Stop(), newSize-2, -1);
+    listIndex++;
+    // origin List copy
+    ContainerB<T> tmpContainer = findFirstElement();
+    while( !(tmpContainer.getContent() instanceof Stop) ){
+      tmpArray[listIndex]=array[tmpContainer.getNextIndex()];
+    }
+    
+    // list copy
     
   }
 
   @Override
   public int size() {
-    // TODO Auto-generated method stub
-    return 0;
+    int counter=0;
+    ContainerB<T> tmpContainer = findFirstElement();
+    while( !(tmpContainer.getContent() instanceof Stop) ){
+      counter++;
+      tmpContainer=array[tmpContainer.getNextIndex()];
+    }
+    return counter;
+  }
+  
+  
+  private ContainerB<T> findFirstElement(){
+    ContainerB<T> first = null;
+    int i = 0;
+    while(first == null || i == array.length){
+      if (array[i].getPreviousIndex() == -1 
+          && array[i].getContent() != null){
+        first = array[i];
+      }
+      i++;
+    }
+    return first;
   }
   
   /**
