@@ -66,7 +66,6 @@ public class ListCTest {
     assertEquals(0, listA.find("a"));
     assertEquals(-1, listA.find("z"));
     assertEquals(listA.size()-1, listA.find("i"));
-    System.out.println("test 3");
     listA.insert(9, "Test");
     assertEquals("Test", listA.retrieve(9));
   }

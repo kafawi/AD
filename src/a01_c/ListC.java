@@ -50,11 +50,13 @@ public class ListC<T> implements List<T> {
             i++;
           }
         }
-        ContainerC<T> tmpContainer = (ContainerC<T>) new ContainerC<Object>(notNullElems[1]);
+        ContainerC<T> tmpContainer = 
+            (ContainerC<T>) new ContainerC<Object>(notNullElems[1]);
         first.setNextElem(tmpContainer);
         if (elemAnz > 1){
           for (int j=2; j < elemAnz; j++){
-            ContainerC<T> nextContainer = (ContainerC<T>) new ContainerC<Object>(notNullElems[j]);
+            ContainerC<T> nextContainer = 
+                (ContainerC<T>) new ContainerC<Object>(notNullElems[j]);
             tmpContainer.setNextElem(nextContainer);
             tmpContainer = nextContainer;
           }
@@ -64,15 +66,38 @@ public class ListC<T> implements List<T> {
     }
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public void insert(int pos, T elem) throws IndexOutOfBoundsException {
-    // TODO Auto-generated method stub
+    if (pos < 0 || pos > size()){
+      throw new IndexOutOfBoundsException();
+    }
+    int posCounter=0;
+    ContainerC<T> prevContainer = first;    
+    while ( posCounter < pos-1 ){
+      prevContainer =  prevContainer.getNextElem(); 
+      posCounter++;
+    }
+    ContainerC<T> insertContainer = 
+        (ContainerC<T>) new ContainerC<Object>(elem);
     
+    insertContainer.setNextElem(prevContainer.getNextElem());
+    prevContainer.setNextElem(insertContainer);
   }
 
   @Override
   public void delete(int pos) throws IndexOutOfBoundsException {
-    // TODO Auto-generated method stub
+    if (pos < 0 || pos >= size()){
+      throw new IndexOutOfBoundsException();
+    }
+    int posCounter=0;
+    ContainerC<T> prevContainer = first; 
+    while ( posCounter < pos-1 ){
+      prevContainer =  prevContainer.getNextElem(); 
+      posCounter++;
+    }
+    
+    prevContainer.setNextElem(prevContainer.getNextElem().getNextElem());
     
   }
 
@@ -83,7 +108,6 @@ public class ListC<T> implements List<T> {
     ContainerC<T> tmpContainer = first;
     
     while ( !(tmpContainer instanceof StopC<?>) ){
-      
       if (tmpContainer.getContent().equals(elem)){
         return foundCounter;
       }
@@ -95,8 +119,16 @@ public class ListC<T> implements List<T> {
 
   @Override
   public T retrieve(int pos) throws IndexOutOfBoundsException {
-    // TODO Auto-generated method stub
-    return null;
+    if (pos < 0 || pos >= size()){
+      throw new IndexOutOfBoundsException();
+    }
+    int posCounter=0;
+    ContainerC<T> tmpContainer = first;
+    while ( posCounter < pos ){
+      tmpContainer = tmpContainer.getNextElem();
+      posCounter++;
+    }
+    return tmpContainer.getContent();
   }
 
   @Override
