@@ -131,10 +131,26 @@ public class ListC<T> implements List<T> {
     return tmpContainer.getContent();
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public void concat(List<T> list) {
-    // TODO Auto-generated method stub
+    ContainerC<T> tmpContainer = first;  
+    while ( !(tmpContainer.getNextElem() instanceof StopC<?>) ){
+      tmpContainer = tmpContainer.getNextElem();
+    }
     
+    // next Elem is the Stop, lets save it
+    ContainerC<T> stop = tmpContainer.getNextElem();
+    
+    ContainerC<T> newContainer = null;
+    for(int i=0; i < list.size(); i++){
+      newContainer=(ContainerC<T>) new ContainerC<Object>(list.retrieve(i));
+      tmpContainer.setNextElem(newContainer);
+      tmpContainer= newContainer;
+     
+    }
+
+    tmpContainer.setNextElem(stop);
   }
 
   @Override
@@ -147,11 +163,6 @@ public class ListC<T> implements List<T> {
     }
     return len;
   }
-  
-  //---------------------------------------------------------------------------
-  
-  
-  //---------------------------------------------------------------------------
-  
+
 
 }
