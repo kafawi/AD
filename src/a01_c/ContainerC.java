@@ -3,13 +3,12 @@
  */
 package a01_c;
 
-import a01.Elem;
 
 /**
  * @author kallotti
  *
  */
-public class ContainerC<T extends Elem> {
+public class ContainerC<T> {
   
   /**
    * 
@@ -19,7 +18,7 @@ public class ContainerC<T extends Elem> {
   /**
    * 
    */
-  private T nextElem;
+  private ContainerC<T> nextElem;
   
   //---------------------------------------------------------------------------
   
@@ -44,7 +43,7 @@ public class ContainerC<T extends Elem> {
    * 
    * @return
    */
-  public T getNextElem(){
+  public ContainerC<T> getNextElem(){
     return nextElem;
   }
   
@@ -52,7 +51,7 @@ public class ContainerC<T extends Elem> {
    * 
    * @param nextElem
    */
-  public void setNextElem(T nextElem){
+  public void setNextElem(ContainerC<T> nextElem){
     this.nextElem=nextElem;
   }
 
