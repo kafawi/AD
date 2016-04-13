@@ -16,8 +16,12 @@ public class ListC<T> implements List<T> {
   //---------------------------------------------------------------------------
   @SuppressWarnings("unchecked")
   public ListC(T start){
-    first =(ContainerC<T>) new ContainerC<Object>(start);
-    first.setNextElem( (StopC<T>) new StopC<Object>());
+    if (start == null){
+      first = (StopC<T>) new StopC<Object>();
+    } else {
+      first =(ContainerC<T>) new ContainerC<Object>(start);
+      first.setNextElem( (StopC<T>) new StopC<Object>());
+    }
   }
   
   @SuppressWarnings("unchecked")
@@ -28,7 +32,7 @@ public class ListC<T> implements List<T> {
         elemAnz++;
     }
     if (elemAnz == 0){
-      first = null;
+      first = (StopC<T>) new StopC<Object>();
     } else {
       first = (ContainerC<T>) new ContainerC<Object>(elems[0]);
       if (elemAnz == 1){
@@ -54,12 +58,6 @@ public class ListC<T> implements List<T> {
         tmpContainer.setNextElem((StopC<T>) new StopC<Object>());
       }
     }
-    
-    first = (ContainerC<T>) new ContainerC<Object>(elems[0]);
-    if (elems.length > 1){
-      first.setNextElem( (StopC<T>) new StopC<Object>());
-    } else
-      first.setNextElem( (StopC<T>) new StopC<Object>());
   }
 
   @Override
