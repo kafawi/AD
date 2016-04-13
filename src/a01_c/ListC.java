@@ -24,6 +24,10 @@ public class ListC<T> implements List<T> {
     }
   }
   
+  /**
+   * Sehr umständlich aber es funker
+   * @param elems
+   */
   @SuppressWarnings("unchecked")
   public ListC(T ... elems){
     int elemAnz=0;
@@ -74,17 +78,19 @@ public class ListC<T> implements List<T> {
 
   @Override
   public int find(T elem) {
-    int foundCounter=-1;
-    T tmp = first.getContent();
-    while(tmp!=null){
-      if(tmp==elem){
+    int foundCounter=0;
+    
+    ContainerC<T> tmpContainer = first;
+    
+    while ( !(tmpContainer instanceof StopC<?>) ){
+      
+      if (tmpContainer.getContent().equals(elem)){
         return foundCounter;
-      }else {
-        foundCounter++;
-//        tmp=first.getNextElem();
       }
+      tmpContainer = tmpContainer.getNextElem();
+      foundCounter++;
     }
-    return foundCounter;
+    return -1;
   }
 
   @Override
@@ -101,8 +107,13 @@ public class ListC<T> implements List<T> {
 
   @Override
   public int size() {
-    // TODO Auto-generated method stub
-    return 0;
+    int len = 0;
+    ContainerC<T> tmpContainer = first;  
+    while ( !(tmpContainer instanceof StopC<?>) ){
+      tmpContainer = tmpContainer.getNextElem();
+      len++;
+    }
+    return len;
   }
   
   //---------------------------------------------------------------------------

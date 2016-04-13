@@ -88,11 +88,7 @@ public class ListBTest {
   public void testConcat() {
     ListB<String> listA = makeAlphListA();
     ListB<String> listB = makeAlphListA();
-    listA.printArray();
-    listB.printArray();
     listA.concat(listB);
-    listA.printArray();
-  
     assertEquals(18, listA.size());
     assertEquals("a", listA.retrieve(0));
     assertEquals("i", listA.retrieve(17));
