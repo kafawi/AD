@@ -11,9 +11,14 @@ import a01.List;
  */
 public class ListC<T> implements List<T> {
   
-  private ContainerC<T> first;
+  public ContainerC<T> first;
   
   //---------------------------------------------------------------------------
+  @SuppressWarnings("unchecked")
+  public ListC(){
+    first = (StopC<T>) new StopC<Object>();
+  }
+  
   @SuppressWarnings("unchecked")
   public ListC(T start){
     if (start == null){
@@ -24,45 +29,30 @@ public class ListC<T> implements List<T> {
     }
   }
   
+  
   /**
    * Sehr umständlich aber es funker
    * @param elems
    */
   @SuppressWarnings("unchecked")
   public ListC(T ... elems){
-    int elemAnz=0;
-    for (T elem : elems){
-      if (elem != null)
-        elemAnz++;
-    }
+    T[] notNullElems = getNotNullElems(elems);
+    int elemAnz=notNullElems.length;
+    
     if (elemAnz == 0){
       first = (StopC<T>) new StopC<Object>();
     } else {
-      first = (ContainerC<T>) new ContainerC<Object>(elems[0]);
-      if (elemAnz == 1){
-        first.setNextElem( (StopC<T>) new StopC<Object>());
-      } else {
-        T[] notNullElems = (T[]) new Object[elemAnz];
-        int i=0;
-        for (T elem : elems){
-          if (elem != null){
-            notNullElems[i] = elem;
-            i++;
-          }
+      ContainerC<T> tmpContainer = 
+          (ContainerC<T>) new ContainerC<Object>(notNullElems[0]); 
+      ContainerC<T> nextContainer = null; 
+      first = tmpContainer;
+        for (int i=1; i < elemAnz; i++){
+          nextContainer = 
+              (ContainerC<T>) new ContainerC<Object>(notNullElems[i]);
+          tmpContainer.setNextElem(nextContainer);
+          tmpContainer = nextContainer;
         }
-        ContainerC<T> tmpContainer = 
-            (ContainerC<T>) new ContainerC<Object>(notNullElems[1]);
-        first.setNextElem(tmpContainer);
-        if (elemAnz > 1){
-          for (int j=2; j < elemAnz; j++){
-            ContainerC<T> nextContainer = 
-                (ContainerC<T>) new ContainerC<Object>(notNullElems[j]);
-            tmpContainer.setNextElem(nextContainer);
-            tmpContainer = nextContainer;
-          }
-        }
-        tmpContainer.setNextElem((StopC<T>) new StopC<Object>());
-      }
+      tmpContainer.setNextElem((StopC<T>) new StopC<Object>());
     }
   }
 
@@ -71,6 +61,9 @@ public class ListC<T> implements List<T> {
   public void insert(int pos, T elem) throws IndexOutOfBoundsException {
     if (pos < 0 || pos > size()){
       throw new IndexOutOfBoundsException();
+    }
+    if (elem == null ){
+      return;
     }
     int posCounter=0;
     ContainerC<T> prevContainer = first;    
@@ -134,20 +127,27 @@ public class ListC<T> implements List<T> {
   @SuppressWarnings("unchecked")
   @Override
   public void concat(List<T> list) {
-    ContainerC<T> tmpContainer = first;  
-    while ( !(tmpContainer.getNextElem() instanceof StopC<?>) ){
-      tmpContainer = tmpContainer.getNextElem();
+    ContainerC<T> tmpContainer = first;
+    ContainerC<T> stop = null;
+    int start=0;
+    if (first instanceof StopC<?> ){
+      stop = first;
+      first=(ContainerC<T>) new ContainerC<Object>(list.retrieve(start));
+      tmpContainer=first;
+      start++;
+    } else {
+      while ( !(tmpContainer.getNextElem() instanceof StopC<?>) ){
+        tmpContainer = tmpContainer.getNextElem();
+      } 
+       // next Elem is the Stop, lets save it
+      stop = tmpContainer.getNextElem();
     }
     
-    // next Elem is the Stop, lets save it
-    ContainerC<T> stop = tmpContainer.getNextElem();
-    
     ContainerC<T> newContainer = null;
-    for(int i=0; i < list.size(); i++){
+    for(int i=start; i < list.size(); i++){
       newContainer=(ContainerC<T>) new ContainerC<Object>(list.retrieve(i));
       tmpContainer.setNextElem(newContainer);
       tmpContainer= newContainer;
-     
     }
 
     tmpContainer.setNextElem(stop);
@@ -164,5 +164,29 @@ public class ListC<T> implements List<T> {
     return len;
   }
 
-
+ //----------------------------------------------------------------------------
+  
+  private void add(T elem){
+    insert(size(), elem);
+  }
+  
+  
+  @SuppressWarnings("unchecked")
+  private T[] getNotNullElems(T ... elems){
+    int elemAnz=0;
+    for (T elem : elems){
+      if (elem != null){
+        elemAnz++;
+      }
+    }
+    T[] arr =(T[]) new Object[elemAnz];
+    int i=0;
+    for (T elem : elems){
+      if (elem != null){
+        arr[i] = elem;
+        i++;
+      }
+    }
+    return arr; 
+  }
 }

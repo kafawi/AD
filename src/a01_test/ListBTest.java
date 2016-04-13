@@ -23,6 +23,9 @@ public class ListBTest {
     ListB<Elem> list = new ListB<Elem>(5,null, new Elem(), null);
     assertNotNull( list );
     assertEquals(1, list.size());
+    ListB<Elem> listE = new ListB<Elem>(3,null, null, null);
+    assertNotNull( listE );
+    assertEquals(0, listE.size());
   }
   
   @Test
@@ -32,6 +35,9 @@ public class ListBTest {
     assertEquals("T", listA.retrieve(4));
   
     listA.insert(1, "BB");
+    assertEquals("BB", listA.retrieve(1));
+    
+    listA.insert(1, null);
     assertEquals("BB", listA.retrieve(1));
   }
   
@@ -55,6 +61,10 @@ public class ListBTest {
       System.out.println(e);
       throw e;
     }
+    // delet 2 leere liste
+    ListB<String> listC = new ListB<String>(11, "stirng");
+    listC.delete(1);
+    assertEquals(0,listC.size());
   }
   
   @Test
@@ -63,9 +73,9 @@ public class ListBTest {
     assertEquals(0, listA.find("a"));
     assertEquals(-1, listA.find("z"));
     assertEquals(listA.size()-1, listA.find("i"));
-    System.out.println("test 3");
     listA.insert(9, "Test");
     assertEquals("Test", listA.retrieve(9));
+    assertEquals(-1, listA.find(null));
   }
   
   @Test(expected=IndexOutOfBoundsException.class)
@@ -92,6 +102,14 @@ public class ListBTest {
     assertEquals(18, listA.size());
     assertEquals("a", listA.retrieve(0));
     assertEquals("i", listA.retrieve(17));
+    
+ // leere liste
+    ListB<String> listC = new ListB<String>(2);
+    listC.concat(listB);
+    assertEquals(9, listC.size());
+    ListB<String> listD = new ListB<String>(2);
+    listB.concat(listD);
+    assertEquals(9, listB.size());
   }
   
   @Test

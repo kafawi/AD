@@ -25,7 +25,8 @@ public class ListCTest {
     assertNotNull( list );
     ListC<Elem> listE = new ListC<Elem>(null, null, null);
     assertNotNull( listE );
-    //assertEquals(1, list.size());
+    assertEquals(1, list.size());
+    assertEquals(0, listE.size());
   }
   
   @Test
@@ -35,6 +36,9 @@ public class ListCTest {
     assertEquals("T", listA.retrieve(4));
   
     listA.insert(1, "BB");
+    assertEquals("BB", listA.retrieve(1));
+    
+    listA.insert(1, null);
     assertEquals("BB", listA.retrieve(1));
   }
   
@@ -58,6 +62,10 @@ public class ListCTest {
       System.out.println(e);
       throw e;
     }
+    // delet 2 leere liste
+    ListC<String> listC = new ListC<String>(null, "stirng");
+    listC.delete(1);
+    assertEquals(0,listC.size());
   }
   
   @Test
@@ -66,8 +74,11 @@ public class ListCTest {
     assertEquals(0, listA.find("a"));
     assertEquals(-1, listA.find("z"));
     assertEquals(listA.size()-1, listA.find("i"));
+    
     listA.insert(9, "Test");
     assertEquals("Test", listA.retrieve(9));
+    
+    assertEquals(-1, listA.find(null));
   }
   
   @Test(expected=IndexOutOfBoundsException.class)
@@ -94,6 +105,14 @@ public class ListCTest {
     assertEquals(18, listA.size());
     assertEquals("a", listA.retrieve(0));
     assertEquals("i", listA.retrieve(17));
+    // leere liste
+    ListC<String> listC = new ListC<String>();
+    listC.concat(listB);
+    assertEquals(9, listC.size());
+    ListC<String> listD = new ListC<String>();
+    listB.concat(listD);
+    assertEquals(9, listB.size());
+    
   }
   
   @Test
@@ -101,7 +120,9 @@ public class ListCTest {
     ListC<String> listA = makeAlphListA();    
     assertEquals(9, listA.size());
     //-- leere Lsite
-    assertEquals(0, new ListB<Elem>(0).size());
+    ListC<String> listB = new ListC<String>();
+    assertEquals(0,listB.size());
+    
     
   }
   

@@ -53,12 +53,15 @@ public class ListB<T> implements List<T> {
         (StopB<T>) new StopB<Object>(elemAnz-1);  
   }
   
-  
+
   @SuppressWarnings("unchecked")
   @Override
   public void insert(int pos, T elem) throws IndexOutOfBoundsException {
     if (pos < 0 || pos > size() ){
       throw new IndexOutOfBoundsException();
+    }
+    if (elem == null) {
+      return;
     }
     int insertIndex= array.length-1; 
     // Array vergrößern?
@@ -131,7 +134,6 @@ public class ListB<T> implements List<T> {
       }
       counter++;
       tmpContainer=array[tmpContainer.getNextIndex()];
-      //System.out.println("" + counter + tmpContainer.getNextIndex() );
     }
     return -1;
   }
@@ -140,13 +142,19 @@ public class ListB<T> implements List<T> {
   @SuppressWarnings("unchecked")
   @Override
   public void concat(List<T> list) {
+    if (list.size() == 0 || list == null ){
+      return;
+    }
+    int oldSize=size();
     int newSize= array.length + list.size();
+    
     // Stoppvariablen
     ContainerB<T> stopContainer = null;
     int stopIndex = -1;
     // neues Array
     ContainerB<T>[] tmpArray = new ContainerB[newSize];
     // Elemente Umschreiben
+
     for (int i=0; i< array.length; i++){
       tmpArray[i]= array[i];
       // catch the stop-Element
@@ -165,23 +173,24 @@ public class ListB<T> implements List<T> {
        ); 
     }
     
-    
-    
     //conecting the joins;
-  //first new -> last old: Nextvalue of the last old
-    int lastOld = stopContainer.getPreviousIndex();
+    //first new -> last old: Nextvalue of the last old
+    int lastOld=-1;
+    
+    lastOld = stopContainer.getPreviousIndex();
     int firstNew = array.length;
     // StopPrev to last 
     stopContainer.setPreviousIndex(newSize-1);
     // LastNex to Stop
-    tmpArray[newSize-1].setNextIndex(stopIndex);
-    
+    tmpArray[newSize-1].setNextIndex(stopIndex);  
     //first new -> last old
     tmpArray[firstNew].setPreviousIndex(lastOld);
-    tmpArray[lastOld].setNextIndex(firstNew);
-   
-    array=tmpArray;
+      
+    if (oldSize > 0){
+      tmpArray[lastOld].setNextIndex(firstNew);
+    }
     
+    array=tmpArray;
   }
   
   @Override
@@ -214,8 +223,10 @@ public class ListB<T> implements List<T> {
     ContainerB<T> first = null;
     int i = 0;
     while(first == null && i < array.length){
-      if (array[i].getPreviousIndex() == -1 ){
-        first = array[i];
+      if(array[i] != null){
+        if ( array[i].getPreviousIndex() == -1){
+          first = array[i];
+        }
       }
       i++;
     }
@@ -232,6 +243,7 @@ public class ListB<T> implements List<T> {
     }
     
   }
+  
   
   //---------------------------------------------------------------------------
 
